@@ -6,6 +6,6 @@ RUN rm /etc/nginx/sites-enabled/default
 
 COPY nginx.conf /etc/nginx/sites-enabled/
 
-COPY index.php /var/www/html/index.php
+COPY src/index.php /var/www/html/index.php
 
 CMD service nginx start && php-fpm
