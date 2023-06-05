@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: your-deployment
+  name: Linnovate-deployment
 spec:
   selector:
     matchLabels:
-      app: your-app
+      app: Linnovate-app
   replicas: 3
   template:
     metadata:
       labels:
-        app: your-app
+        app: Linnovate-app
     spec:
       containers:
-      - name: your-app-container
+      - name: Linnovate-app
         image: ofiraviv/nginx-php-fpm:$BUILD_NUMBER
         ports:
         - containerPort: 80
@@ -21,10 +21,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: your-service
+  name: Linnovate-service
 spec:
   selector:
-    app: your-app
+    app: Linnovate-app
   ports:
   - protocol: TCP
     port: 80
