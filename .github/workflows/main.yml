@@ -44,7 +44,7 @@ jobs:
         run: |
           kubectl config use-context minikube
           
-          sed -i "s|ofiraviv/nginx-php-fpm:latest|ofiraviv/nginx-php-fpm:latest|g" k8s/deployment.yaml
+          sed -i "s|ofiraviv/nginx-php-fpm:latest|ofiraviv/nginx-php-fpm:latest|g" deployment.yaml
           
           kubectl apply -f k8s/deployment.yaml
 
