@@ -22,13 +22,15 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Install and configure kubectl
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
       run: |
-        curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         chmod +x ./kubectl
-        mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-        echo 'AWS_REGION=${{ secrets.AWS_REGION }}' >> $GITHUB_ENV
-        echo 'EKS_CLUSTER_NAME=${{ secrets.EKS_CLUSTER_NAME }}' >> $GITHUB_ENV
-        aws eks update-kubeconfig --region $AWS_REGION --name ${{ secrets.EKS_CLUSTER_NAME }}
+        sudo mv ./kubectl /usr/local/bin/kubectl
+        aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      
 
     - name: Build and push Docker image
       run: |
