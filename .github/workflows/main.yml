@@ -28,7 +28,7 @@ jobs:
         mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
         echo 'AWS_REGION=${{ secrets.AWS_REGION }}' >> $GITHUB_ENV
         echo 'EKS_CLUSTER_NAME=${{ secrets.EKS_CLUSTER_NAME }}' >> $GITHUB_ENV
-        aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+        aws eks update-kubeconfig --region $AWS_REGION --name ${{ secrets.EKS_CLUSTER_NAME }}
 
     - name: Build and push Docker image
       run: |
