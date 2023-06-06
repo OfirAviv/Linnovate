@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-php-app
-        image: ${{ secrets.DOCKERHUB_USERNAME }}/my-php-app:${{ github.sha }}
+        image: ofiraviv/my-php-app:latest
         ports:
         - containerPort: 80
 ---
