@@ -41,8 +41,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-  - host: "a2de71264d0554323b7fa34bd9ef38a2-2056558112.us-east-2.elb.amazonaws.com " 
-    http:
+  - http:
       paths:
       - pathType: Prefix
         path: "/"
