@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: ofiraviv/my-nginx:latest
+        image: nginx:stable
         ports:
         - containerPort: 80
         volumeMounts:
