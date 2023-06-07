@@ -24,6 +24,7 @@ metadata:
   name: php-app
 spec:
   selector:
+    type: ClusterIP
     app: php-app
   ports:
     - protocol: TCP
