@@ -3,6 +3,7 @@ name: Deploy to EKS - miceoservices
 on:
   push:
     branches:
+      - main
       - develop
   workflow_dispatch:
     inputs:
@@ -52,7 +53,7 @@ jobs:
 
     - name: Build and push Nginx Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }} ./nginx/nginx.Dockerfile
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }} -f ./nginx.Dockerfile .
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }}
 
@@ -67,6 +68,6 @@ jobs:
     - name: Deploy to EKS
       run: |
         kubectl apply -f k8s/php-deployment.yaml
-        kubectl rollout status deployment/php-app
         kubectl apply -f k8s/nginx-deployment.yaml
-        kubectl rollout status deployment/nginx
+        kubectl apply -f k8s/nginx-ingress.yaml
+
