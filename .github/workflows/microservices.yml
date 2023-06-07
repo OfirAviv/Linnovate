@@ -71,3 +71,4 @@ jobs:
         kubectl rollout status deployment/php-app
         kubectl apply -f k8s/nginx-deployment.yaml
         kubectl rollout status deployment/nginx
+        kubectl apply -f k8s/ingress.yaml
