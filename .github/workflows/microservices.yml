@@ -70,3 +70,4 @@ jobs:
         kubectl apply -f k8s/php-deployment.yaml
         kubectl apply -f k8s/nginx-deployment.yaml
         kubectl apply -f k8s/nginx-ingress.yaml
+
