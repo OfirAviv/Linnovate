@@ -1,30 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    worker_processes 1;
+
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        include mime.types;
+        default_type application/octet-stream;
+        sendfile on;
+        keepalive_timeout 65;
+
+        server {
+            listen 80;
+            server_name localhost;
+
+            location / {
+                root /usr/share/nginx/html;
+                index index.php index.html index.htm;
+                try_files $uri $uri/ /index.php?$args;
+            }
+
+            error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+                root /usr/share/nginx/html;
+            }
+
+            location ~ \.php$ {
+                root /usr/share/nginx/html;
+                fastcgi_pass php-fpm-service:9000;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+            }
+        }
+    }
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php-fpm-deployment
+  name: nginx-deployment
 spec:
   selector:
     matchLabels:
-      app: php-fpm
+      app: nginx
   replicas: 1
   template:
     metadata:
       labels:
-        app: php-fpm
+        app: nginx
     spec:
       containers:
-      - name: php-fpm
-        image: <your-docker-username>/my-php-app:latest
+      - name: nginx
+        image: ofiraviv/my-nginx:latest
         ports:
-        - containerPort: 9000
+        - containerPort: 80
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: conf
+        configMap:
+          name: nginx-conf
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: php-fpm-service
+  name: nginx-service
 spec:
   selector:
-    app: php-fpm
+    app: nginx
   ports:
     - protocol: TCP
-      port: 9000
+      port: 80
+  type: LoadBalancer
