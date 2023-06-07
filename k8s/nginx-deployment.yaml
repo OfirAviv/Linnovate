@@ -49,7 +49,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: conf
-          mountPath: /etc/nginx/conf.d
+          mountPath: /etc/nginx
           subPath: nginx.conf
       volumes:
       - name: conf
