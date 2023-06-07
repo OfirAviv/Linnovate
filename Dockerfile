@@ -1,4 +1,3 @@
 FROM php:7.4-fpm
 
-COPY src/ /var/www/html/
-
+COPY src/ /usr/share/nginx/html/
