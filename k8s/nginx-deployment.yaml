@@ -4,41 +4,41 @@ metadata:
   name: nginx-conf
 data:
   nginx.conf: |
-    worker_processes 1;
+    server {
+    # Listen on port 80 (HTTP) for all IP addresses, both IPv4 and IPv6
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-    events {
-        worker_connections 1024;
+    # Define the root directory where static files are located
+    root /var/www/html;
+
+    # Specify the default files to serve when a directory is requested
+    index index.php index.html;
+
+    # The server responds to any hostname that is not otherwise defined
+    server_name _;
+
+    # Location block for handling regular URIs
+    location / {
+        # First try to serve the exact URI, then URI with a trailing slash
+        # If nothing is found, respond with a 404 error
+        try_files $uri $uri/ =404;
     }
 
-    http {
-        include mime.types;
-        default_type application/octet-stream;
-        sendfile on;
-        keepalive_timeout 65;
+    # Location block for handling PHP files
+    location ~ \.php$ {
+        # Include standard fastcgi parameters
+        include fastcgi_params;
 
-        server {
-            listen 80;
-            server_name localhost;
+        # Explicitly define the REQUEST_METHOD FastCGI parameter
+        fastcgi_param REQUEST_METHOD $request_method;
 
-            location / {
-                root /usr/share/nginx/html;
-                index index.php index.html index.htm;
-                try_files $uri $uri/ /index.php?$args;
-            }
+        # Explicitly define the SCRIPT_FILENAME FastCGI parameter
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-            error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-                root /usr/share/nginx/html;
-            }
-
-            location ~ \.php$ {
-                root /usr/share/nginx/html;
-                fastcgi_pass php-fpm-service:9000;
-                fastcgi_index index.php;
-                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                include fastcgi_params;
-            }
-        }
+        # Pass the request to the FastCGI server on localhost port 9000 (default port)
+        fastcgi_pass php-fpm-service:9000;
+      }
     }
 
 ---
