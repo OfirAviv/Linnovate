@@ -39,7 +39,7 @@ jobs:
 
     - name: Build and push PHP Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-php-app:${{ github.sha }} -f Dockerfile
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-php-app:${{ github.sha }} .
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-php-app:${{ github.sha }}
 
@@ -53,7 +53,7 @@ jobs:
 
     - name: Build and push Nginx Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }} -f ./nginx.Dockerfile
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }} -f ./nginx/nginx.Dockerfile
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx:${{ github.sha }}
 
